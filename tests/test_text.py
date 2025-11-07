@@ -15,3 +15,11 @@ def test_normalize_unicode_boundaries():
     with pytest.raises(ValueError):
         m.normalize_unicode("text", "bad")
     assert m.normalize_unicode("") == ""
+
+
+def test_normalize_unicode_invariants():
+    for form in ["NFC", "NFD", "NFKC", "NFKD"]:
+        for text in ["Ａbc", "é", "你好🎵", "Straße"]:
+            value = m.normalize_unicode(text, form)
+            assert m.normalize_unicode(value, form) == value
+    assert m.normalize_unicode("é", "NFD") == "é"
