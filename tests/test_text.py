@@ -23,3 +23,7 @@ def test_normalize_unicode_invariants():
             value = m.normalize_unicode(text, form)
             assert m.normalize_unicode(value, form) == value
     assert m.normalize_unicode("é", "NFD") == "é"
+
+
+def test_casefold_example():
+    assert m.casefold("Straße ABC") == "strasse abc"

@@ -18,3 +18,8 @@ def normalize_unicode(text: str, form: str = "NFKC") -> str:
     if form not in ["NFC", "NFD", "NFKC", "NFKD"]:
         raise ValueError("unsupported normalization form")
     return unicodedata.normalize(form, _text(text))
+
+
+def casefold(text: str) -> str:
+    """Apply Unicode case folding rather than ASCII-only lowercasing."""
+    return _text(text).casefold()
