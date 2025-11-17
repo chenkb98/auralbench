@@ -8,3 +8,7 @@
 ## `casefold`
 
 使用 Unicode casefold 处理大小写，适合跨语言文本比较。它可能改变字符数量，因此 CER 的规范化策略必须记录。
+
+## `collapse_whitespace`
+
+将 Unicode 空白连续段统一为一个普通空格，并移除两端空白。保留词边界，不将原本分开的单词连接起来。
