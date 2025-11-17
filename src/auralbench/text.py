@@ -23,3 +23,8 @@ def normalize_unicode(text: str, form: str = "NFKC") -> str:
 def casefold(text: str) -> str:
     """Apply Unicode case folding rather than ASCII-only lowercasing."""
     return _text(text).casefold()
+
+
+def collapse_whitespace(text: str) -> str:
+    """Trim and join runs of Unicode whitespace into single ASCII spaces."""
+    return " ".join(_text(text).split())

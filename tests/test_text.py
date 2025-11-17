@@ -40,3 +40,7 @@ def test_casefold_invariants():
     for text in ["ABC", "Straße", "Σσς", "İ", "你好"]:
         assert m.casefold(m.casefold(text)) == m.casefold(text)
     assert m.casefold("Σσς") == "σσσ"
+
+
+def test_collapse_whitespace_example():
+    assert m.collapse_whitespace("  one\t two\nthree ") == "one two three"
