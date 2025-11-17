@@ -51,3 +51,10 @@ def test_collapse_whitespace_boundaries():
     assert m.collapse_whitespace("a b") == "a b"
     with pytest.raises(ValueError):
         m.collapse_whitespace(1)
+
+
+def test_collapse_whitespace_invariants():
+    for text in ["", " a  b ", "你好\n世界", "a b"]:
+        value = m.collapse_whitespace(text)
+        assert m.collapse_whitespace(value) == value
+        assert not value.startswith(" ") and not value.endswith(" ") and "  " not in value
