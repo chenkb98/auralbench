@@ -27,3 +27,10 @@ def test_normalize_unicode_invariants():
 
 def test_casefold_example():
     assert m.casefold("Straße ABC") == "strasse abc"
+
+
+def test_casefold_boundaries():
+    assert m.casefold("") == ""
+    assert m.casefold("你好🎵") == "你好🎵"
+    with pytest.raises(ValueError):
+        m.casefold(None)
