@@ -44,3 +44,10 @@ def test_casefold_invariants():
 
 def test_collapse_whitespace_example():
     assert m.collapse_whitespace("  one\t two\nthree ") == "one two three"
+
+
+def test_collapse_whitespace_boundaries():
+    assert m.collapse_whitespace(" \t\n") == ""
+    assert m.collapse_whitespace("a b") == "a b"
+    with pytest.raises(ValueError):
+        m.collapse_whitespace(1)
