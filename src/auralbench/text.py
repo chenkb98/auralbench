@@ -28,3 +28,12 @@ def casefold(text: str) -> str:
 def collapse_whitespace(text: str) -> str:
     """Trim and join runs of Unicode whitespace into single ASCII spaces."""
     return " ".join(_text(text).split())
+
+
+def strip_punctuation(text: str) -> str:
+    """Replace Unicode punctuation with spaces, preserving token boundaries."""
+    import unicodedata
+
+    return "".join(
+        " " if unicodedata.category(char).startswith("P") else char for char in _text(text)
+    )

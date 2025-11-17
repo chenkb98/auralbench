@@ -58,3 +58,7 @@ def test_collapse_whitespace_invariants():
         value = m.collapse_whitespace(text)
         assert m.collapse_whitespace(value) == value
         assert not value.startswith(" ") and not value.endswith(" ") and "  " not in value
+
+
+def test_strip_punctuation_example():
+    assert m.strip_punctuation("hello-world，你好！") == "hello world 你好 "
