@@ -34,3 +34,9 @@ def test_casefold_boundaries():
     assert m.casefold("你好🎵") == "你好🎵"
     with pytest.raises(ValueError):
         m.casefold(None)
+
+
+def test_casefold_invariants():
+    for text in ["ABC", "Straße", "Σσς", "İ", "你好"]:
+        assert m.casefold(m.casefold(text)) == m.casefold(text)
+    assert m.casefold("Σσς") == "σσσ"
