@@ -12,3 +12,7 @@
 ## `collapse_whitespace`
 
 将 Unicode 空白连续段统一为一个普通空格，并移除两端空白。保留词边界，不将原本分开的单词连接起来。
+
+## `strip_punctuation`
+
+用空格替换 Unicode 标点类字符，保留词间隔。数学符号与 emoji 不属于标点类，默认保留。
