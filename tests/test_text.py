@@ -69,3 +69,11 @@ def test_strip_punctuation_boundaries():
     assert m.strip_punctuation("a+b 🎵") == "a+b 🎵"
     with pytest.raises(ValueError):
         m.strip_punctuation(None)
+
+
+def test_strip_punctuation_invariants():
+    for text in ["a-b", "你好，世界。", "“quoted”", "one/two"]:
+        value = m.strip_punctuation(text)
+        assert m.strip_punctuation(value) == value
+        assert len(value) == len(text)
+    assert m.collapse_whitespace(m.strip_punctuation("one--two")) == "one two"
