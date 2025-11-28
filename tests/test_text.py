@@ -62,3 +62,10 @@ def test_collapse_whitespace_invariants():
 
 def test_strip_punctuation_example():
     assert m.strip_punctuation("hello-world，你好！") == "hello world 你好 "
+
+
+def test_strip_punctuation_boundaries():
+    assert m.strip_punctuation("") == ""
+    assert m.strip_punctuation("a+b 🎵") == "a+b 🎵"
+    with pytest.raises(ValueError):
+        m.strip_punctuation(None)
