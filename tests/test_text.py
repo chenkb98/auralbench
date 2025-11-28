@@ -81,3 +81,11 @@ def test_strip_punctuation_invariants():
 
 def test_normalize_text_example():
     assert m.normalize_text(" Ｈello， WORLD! ", punctuation=True) == "hello world"
+
+
+def test_normalize_text_boundaries():
+    with pytest.raises(ValueError):
+        m.normalize_text("x", fold_case=1)
+    with pytest.raises(ValueError):
+        m.normalize_text("x", punctuation="yes")
+    assert m.normalize_text("HI!", fold_case=False) == "HI!"
