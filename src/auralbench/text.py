@@ -37,3 +37,15 @@ def strip_punctuation(text: str) -> str:
     return "".join(
         " " if unicodedata.category(char).startswith("P") else char for char in _text(text)
     )
+
+
+def normalize_text(text: str, fold_case: bool = True, punctuation: bool = False) -> str:
+    """Apply a documented NFKC, optional case/punctuation, whitespace pipeline."""
+    if type(fold_case) is not bool or type(punctuation) is not bool:
+        raise ValueError("normalization flags must be boolean")
+    value = normalize_unicode(text)
+    if fold_case:
+        value = casefold(value)
+    if punctuation:
+        value = strip_punctuation(value)
+    return collapse_whitespace(value)

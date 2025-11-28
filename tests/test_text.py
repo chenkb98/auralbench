@@ -77,3 +77,7 @@ def test_strip_punctuation_invariants():
         assert m.strip_punctuation(value) == value
         assert len(value) == len(text)
     assert m.collapse_whitespace(m.strip_punctuation("one--two")) == "one two"
+
+
+def test_normalize_text_example():
+    assert m.normalize_text(" Ｈello， WORLD! ", punctuation=True) == "hello world"
