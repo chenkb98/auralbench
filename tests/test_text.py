@@ -97,3 +97,7 @@ def test_normalize_text_invariants():
             value = m.normalize_text(" Ａbc，Straße\n你好 ", fold, punctuation)
             assert m.normalize_text(value, fold, punctuation) == value
     assert m.normalize_text("Hello!") == "hello!"
+
+
+def test_word_tokens_example():
+    assert m.word_tokens(" One   TWO ") == ["one", "two"]

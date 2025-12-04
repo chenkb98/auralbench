@@ -49,3 +49,8 @@ def normalize_text(text: str, fold_case: bool = True, punctuation: bool = False)
     if punctuation:
         value = strip_punctuation(value)
     return collapse_whitespace(value)
+
+
+def word_tokens(text: str, fold_case: bool = True, punctuation: bool = False) -> list[str]:
+    """Split normalized text on whitespace; no language-specific segmentation."""
+    return normalize_text(text, fold_case, punctuation).split()
