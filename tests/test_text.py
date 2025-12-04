@@ -101,3 +101,10 @@ def test_normalize_text_invariants():
 
 def test_word_tokens_example():
     assert m.word_tokens(" One   TWO ") == ["one", "two"]
+
+
+def test_word_tokens_boundaries():
+    assert m.word_tokens("") == []
+    assert m.word_tokens("你好世界") == ["你好世界"]
+    with pytest.raises(ValueError):
+        m.word_tokens(None)
