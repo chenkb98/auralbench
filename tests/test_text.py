@@ -89,3 +89,11 @@ def test_normalize_text_boundaries():
     with pytest.raises(ValueError):
         m.normalize_text("x", punctuation="yes")
     assert m.normalize_text("HI!", fold_case=False) == "HI!"
+
+
+def test_normalize_text_invariants():
+    for fold in [False, True]:
+        for punctuation in [False, True]:
+            value = m.normalize_text(" Ａbc，Straße\n你好 ", fold, punctuation)
+            assert m.normalize_text(value, fold, punctuation) == value
+    assert m.normalize_text("Hello!") == "hello!"
