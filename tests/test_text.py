@@ -108,3 +108,11 @@ def test_word_tokens_boundaries():
     assert m.word_tokens("你好世界") == ["你好世界"]
     with pytest.raises(ValueError):
         m.word_tokens(None)
+
+
+def test_word_tokens_invariants():
+    for text in ["one two", "你好 世界", "a-b c", "Straße ABC"]:
+        tokens = m.word_tokens(text)
+        assert " ".join(tokens) == m.normalize_text(text)
+        assert m.word_tokens(" ".join(tokens)) == tokens
+    assert m.word_tokens("one-two", punctuation=True) == ["one", "two"]
