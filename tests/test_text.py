@@ -120,3 +120,12 @@ def test_word_tokens_invariants():
 
 def test_character_tokens_example():
     assert m.character_tokens("你 好") == ["你", "好"]
+
+
+def test_character_tokens_boundaries():
+    assert m.character_tokens("") == []
+    assert m.character_tokens("a b", False) == ["a", " ", "b"]
+    with pytest.raises(ValueError):
+        m.character_tokens(None)
+    with pytest.raises(ValueError):
+        m.character_tokens("a", 1)
