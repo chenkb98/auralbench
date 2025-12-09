@@ -54,3 +54,11 @@ def normalize_text(text: str, fold_case: bool = True, punctuation: bool = False)
 def word_tokens(text: str, fold_case: bool = True, punctuation: bool = False) -> list[str]:
     """Split normalized text on whitespace; no language-specific segmentation."""
     return normalize_text(text, fold_case, punctuation).split()
+
+
+def character_tokens(text: str, remove_spaces: bool = True) -> list[str]:
+    """Return normalized Unicode codepoints, optionally excluding spaces."""
+    if type(remove_spaces) is not bool:
+        raise ValueError("remove_spaces must be boolean")
+    value = normalize_text(text)
+    return [char for char in value if not remove_spaces or char != " "]

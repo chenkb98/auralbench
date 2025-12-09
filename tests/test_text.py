@@ -116,3 +116,7 @@ def test_word_tokens_invariants():
         assert " ".join(tokens) == m.normalize_text(text)
         assert m.word_tokens(" ".join(tokens)) == tokens
     assert m.word_tokens("one-two", punctuation=True) == ["one", "two"]
+
+
+def test_character_tokens_example():
+    assert m.character_tokens("你 好") == ["你", "好"]
