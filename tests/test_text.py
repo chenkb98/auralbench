@@ -129,3 +129,10 @@ def test_character_tokens_boundaries():
         m.character_tokens(None)
     with pytest.raises(ValueError):
         m.character_tokens("a", 1)
+
+
+def test_character_tokens_invariants():
+    for text in ["你好世界", "é", "ＡＢＣ", "🎵🙂"]:
+        tokens = m.character_tokens(text)
+        assert "".join(tokens) == m.normalize_text(text).replace(" ", "")
+        assert all(len(token) == 1 for token in tokens)
