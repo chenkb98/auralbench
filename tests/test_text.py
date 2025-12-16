@@ -136,3 +136,8 @@ def test_character_tokens_invariants():
         tokens = m.character_tokens(text)
         assert "".join(tokens) == m.normalize_text(text).replace(" ", "")
         assert all(len(token) == 1 for token in tokens)
+
+
+def test_edit_alignment_example():
+    value = m.edit_alignment(["one", "two"], ["one", "red"])
+    assert value["distance"] == 1 and value["matches"] == 1 and value["substitutions"] == 1

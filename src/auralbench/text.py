@@ -62,3 +62,53 @@ def character_tokens(text: str, remove_spaces: bool = True) -> list[str]:
         raise ValueError("remove_spaces must be boolean")
     value = normalize_text(text)
     return [char for char in value if not remove_spaces or char != " "]
+
+
+def edit_alignment(reference: list[str], hypothesis: list[str]) -> dict:
+    """Compute bounded Levenshtein alignment with deterministic tie breaking."""
+    for tokens in [reference, hypothesis]:
+        if not isinstance(tokens, (list, tuple)) or any(
+            not isinstance(token, str) for token in tokens
+        ):
+            raise ValueError("alignment needs string token sequences")
+    n, k = len(reference), len(hypothesis)
+    if (n + 1) * (k + 1) > 1000000:
+        raise ValueError("alignment exceeds one million cells; segment long transcripts")
+    costs = np.zeros((n + 1, k + 1), dtype=np.int32)
+    costs[:, 0], costs[0, :] = np.arange(n + 1), np.arange(k + 1)
+    for i in range(1, n + 1):
+        for j in range(1, k + 1):
+            costs[i, j] = min(
+                costs[i - 1, j] + 1,
+                costs[i, j - 1] + 1,
+                costs[i - 1, j - 1] + int(reference[i - 1] != hypothesis[j - 1]),
+            )
+    i, j, operations = n, k, []
+    counts = dict(matches=0, substitutions=0, deletions=0, insertions=0)
+    while i or j:
+        if (
+            i
+            and j
+            and costs[i, j] == costs[i - 1, j - 1] + int(reference[i - 1] != hypothesis[j - 1])
+        ):
+            same = reference[i - 1] == hypothesis[j - 1]
+            counts["matches" if same else "substitutions"] += 1
+            operations.append(
+                {"op": "match" if same else "substitute", "reference": i - 1, "hypothesis": j - 1}
+            )
+            i, j = i - 1, j - 1
+        elif i and costs[i, j] == costs[i - 1, j] + 1:
+            counts["deletions"] += 1
+            operations.append({"op": "delete", "reference": i - 1, "hypothesis": None})
+            i -= 1
+        else:
+            counts["insertions"] += 1
+            operations.append({"op": "insert", "reference": None, "hypothesis": j - 1})
+            j -= 1
+    return dict(
+        counts,
+        distance=int(costs[n, k]),
+        reference_length=n,
+        hypothesis_length=k,
+        operations=list(reversed(operations)),
+    )
