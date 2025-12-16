@@ -141,3 +141,13 @@ def test_character_tokens_invariants():
 def test_edit_alignment_example():
     value = m.edit_alignment(["one", "two"], ["one", "red"])
     assert value["distance"] == 1 and value["matches"] == 1 and value["substitutions"] == 1
+
+
+def test_edit_alignment_boundaries():
+    assert m.edit_alignment([], [])["distance"] == 0
+    assert m.edit_alignment([], ["a", "b"])["insertions"] == 2
+    assert m.edit_alignment(["a", "b"], [])["deletions"] == 2
+    with pytest.raises(ValueError):
+        m.edit_alignment([1], [])
+    with pytest.raises(ValueError):
+        m.edit_alignment(["a"] * 1000, ["b"] * 1000)
