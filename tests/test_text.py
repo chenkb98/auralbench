@@ -151,3 +151,21 @@ def test_edit_alignment_boundaries():
         m.edit_alignment([1], [])
     with pytest.raises(ValueError):
         m.edit_alignment(["a"] * 1000, ["b"] * 1000)
+
+
+def test_edit_alignment_invariants():
+    import itertools
+
+    sequences = [
+        list(value) for size in range(4) for value in itertools.product(["a", "b"], repeat=size)
+    ]
+    for a in sequences:
+        for b in sequences:
+            value = m.edit_alignment(a, b)
+            assert value["distance"] == m.edit_alignment(b, a)["distance"]
+            assert (
+                value["distance"]
+                == value["substitutions"] + value["insertions"] + value["deletions"]
+            )
+            assert value["matches"] + value["substitutions"] + value["deletions"] == len(a)
+            assert value["matches"] + value["substitutions"] + value["insertions"] == len(b)
