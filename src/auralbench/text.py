@@ -112,3 +112,9 @@ def edit_alignment(reference: list[str], hypothesis: list[str]) -> dict:
         hypothesis_length=k,
         operations=list(reversed(operations)),
     )
+
+
+def word_error_rate(reference: str, hypothesis: str) -> float:
+    """WER after the documented default normalization, including empty references."""
+    alignment = edit_alignment(word_tokens(reference), word_tokens(hypothesis))
+    return alignment["distance"] / max(1, alignment["reference_length"])

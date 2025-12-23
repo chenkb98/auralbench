@@ -169,3 +169,7 @@ def test_edit_alignment_invariants():
             )
             assert value["matches"] + value["substitutions"] + value["deletions"] == len(a)
             assert value["matches"] + value["substitutions"] + value["insertions"] == len(b)
+
+
+def test_word_error_rate_example():
+    assert m.word_error_rate("one two", "one red two") == 0.5
