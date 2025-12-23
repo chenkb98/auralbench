@@ -181,3 +181,10 @@ def test_word_error_rate_boundaries():
     assert m.word_error_rate("one two", "") == 1
     with pytest.raises(ValueError):
         m.word_error_rate(None, "text")
+
+
+def test_word_error_rate_invariants():
+    for text in ["", "Hello WORLD", "你好 世界", "a-b c"]:
+        assert m.word_error_rate(text, text) == 0
+    assert m.word_error_rate("ONE TWO", "one two") == 0
+    assert m.word_error_rate("one", "one two three") == 2
