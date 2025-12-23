@@ -173,3 +173,11 @@ def test_edit_alignment_invariants():
 
 def test_word_error_rate_example():
     assert m.word_error_rate("one two", "one red two") == 0.5
+
+
+def test_word_error_rate_boundaries():
+    assert m.word_error_rate("", "") == 0
+    assert m.word_error_rate("", "one two") == 2
+    assert m.word_error_rate("one two", "") == 1
+    with pytest.raises(ValueError):
+        m.word_error_rate(None, "text")
