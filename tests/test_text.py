@@ -200,3 +200,11 @@ def test_character_error_rate_boundaries():
     assert m.character_error_rate("你好", "") == 1
     with pytest.raises(ValueError):
         m.character_error_rate("a", None)
+
+
+def test_character_error_rate_invariants():
+    assert m.character_error_rate("你 好", "你好") == 0
+    assert m.character_error_rate("é", "é") == 0
+    assert m.character_error_rate("ＡBC", "abc") == 0
+    for text in ["", "普通话", "café", "🎵🙂"]:
+        assert m.character_error_rate(text, text) == 0
