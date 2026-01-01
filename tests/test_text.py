@@ -192,3 +192,11 @@ def test_word_error_rate_invariants():
 
 def test_character_error_rate_example():
     assert m.character_error_rate("你好", "你号") == 0.5
+
+
+def test_character_error_rate_boundaries():
+    assert m.character_error_rate("", "") == 0
+    assert m.character_error_rate("", "你好") == 2
+    assert m.character_error_rate("你好", "") == 1
+    with pytest.raises(ValueError):
+        m.character_error_rate("a", None)
