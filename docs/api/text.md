@@ -36,3 +36,7 @@
 ## `word_error_rate`
 
 WER 为编辑总数除以参考词数；空参考以分母 1 处理插入，行为与 JiWER 4 的约定一致。插入较多时 WER 可以大于 1。
+
+## `character_error_rate`
+
+CER 对规范化后的 Unicode 码点计算编辑率，默认忽略空格。与 WER 一起报告可避免中文无空白分词造成的粗糙结果。
