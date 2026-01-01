@@ -118,3 +118,9 @@ def word_error_rate(reference: str, hypothesis: str) -> float:
     """WER after the documented default normalization, including empty references."""
     alignment = edit_alignment(word_tokens(reference), word_tokens(hypothesis))
     return alignment["distance"] / max(1, alignment["reference_length"])
+
+
+def character_error_rate(reference: str, hypothesis: str) -> float:
+    """CER over normalized codepoints with whitespace excluded."""
+    alignment = edit_alignment(character_tokens(reference), character_tokens(hypothesis))
+    return alignment["distance"] / max(1, alignment["reference_length"])
