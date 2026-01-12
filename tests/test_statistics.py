@@ -31,3 +31,10 @@ def test_mean_boundaries():
     assert m.mean([0]) == 0
     with pytest.raises(ValueError):
         m.mean([])
+
+
+def test_mean_invariants():
+    values = np.array([-3.0, 1.0, 5.0, 9.0])
+    assert m.mean(values[::-1]) == pytest.approx(m.mean(values))
+    assert m.mean(values + 10) == pytest.approx(m.mean(values) + 10)
+    assert m.mean(values * 3) == pytest.approx(m.mean(values) * 3)
