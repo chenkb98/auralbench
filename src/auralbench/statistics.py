@@ -14,3 +14,10 @@ def finite_values(values: ArrayLike) -> NDArray[np.float64]:
     if not np.isfinite(result).all():
         raise ValueError("observations must be finite")
     return result
+
+
+def mean(values: ArrayLike) -> float:
+    """Compute an overflow-resistant arithmetic mean via magnitude scaling."""
+    array = finite_values(values)
+    scale = float(np.max(np.abs(array)))
+    return float(np.mean(array / scale) * scale) if scale else 0.0

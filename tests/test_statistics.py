@@ -19,3 +19,7 @@ def test_finite_values_invariants():
     y[0] = 99
     assert x[0] == 1 and y.dtype == np.float64
     np.testing.assert_array_equal(m.finite_values(m.finite_values(x)), x)
+
+
+def test_mean_example():
+    assert m.mean([1, 2, 6]) == pytest.approx(3)
