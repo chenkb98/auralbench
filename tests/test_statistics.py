@@ -23,3 +23,11 @@ def test_finite_values_invariants():
 
 def test_mean_example():
     assert m.mean([1, 2, 6]) == pytest.approx(3)
+
+
+def test_mean_boundaries():
+    assert m.mean([1e308, 1e308]) == 1e308
+    assert m.mean([1e308, -1e308]) == 0
+    assert m.mean([0]) == 0
+    with pytest.raises(ValueError):
+        m.mean([])
