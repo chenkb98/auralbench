@@ -50,3 +50,10 @@ def test_median_boundaries():
     assert m.median([-1e308, 1e308]) == 0
     with pytest.raises(ValueError):
         m.median([np.nan])
+
+
+def test_median_invariants():
+    x = np.array([5.0, 1.0, 2.0, 7.0, 3.0])
+    assert m.median(x) == m.median(x[::-1]) == 3
+    assert m.median(x + 10) == pytest.approx(13)
+    np.testing.assert_array_equal(x, [5, 1, 2, 7, 3])
