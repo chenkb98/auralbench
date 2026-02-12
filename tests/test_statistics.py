@@ -57,3 +57,7 @@ def test_median_invariants():
     assert m.median(x) == m.median(x[::-1]) == 3
     assert m.median(x + 10) == pytest.approx(13)
     np.testing.assert_array_equal(x, [5, 1, 2, 7, 3])
+
+
+def test_quantile_example():
+    assert m.quantile([0, 10, 20, 30], 0.25) == pytest.approx(7.5)

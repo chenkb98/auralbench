@@ -28,3 +28,12 @@ def median(values: ArrayLike) -> float:
     array = finite_values(values)
     scale = float(np.max(np.abs(array)))
     return float(np.median(array / scale) * scale) if scale else 0.0
+
+
+def quantile(values: ArrayLike, probability: float) -> float:
+    """Linear interpolated sample quantile, explicitly matching NumPy's linear method."""
+    array = finite_values(values)
+    if not np.isfinite(probability) or not 0 <= probability <= 1:
+        raise ValueError("probability must be in [0, 1]")
+    scale = float(np.max(np.abs(array)))
+    return float(np.quantile(array / scale, probability, method="linear") * scale) if scale else 0.0
