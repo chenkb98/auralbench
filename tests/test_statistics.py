@@ -43,3 +43,10 @@ def test_mean_invariants():
 def test_median_example():
     assert m.median([9, 1, 5]) == 5
     assert m.median([1, 3, 7, 9]) == 5
+
+
+def test_median_boundaries():
+    assert m.median([1e308, 1e308]) == 1e308
+    assert m.median([-1e308, 1e308]) == 0
+    with pytest.raises(ValueError):
+        m.median([np.nan])
