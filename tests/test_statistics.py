@@ -38,3 +38,8 @@ def test_mean_invariants():
     assert m.mean(values[::-1]) == pytest.approx(m.mean(values))
     assert m.mean(values + 10) == pytest.approx(m.mean(values) + 10)
     assert m.mean(values * 3) == pytest.approx(m.mean(values) * 3)
+
+
+def test_median_example():
+    assert m.median([9, 1, 5]) == 5
+    assert m.median([1, 3, 7, 9]) == 5

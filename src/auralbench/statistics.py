@@ -21,3 +21,10 @@ def mean(values: ArrayLike) -> float:
     array = finite_values(values)
     scale = float(np.max(np.abs(array)))
     return float(np.mean(array / scale) * scale) if scale else 0.0
+
+
+def median(values: ArrayLike) -> float:
+    """Compute a stable sample median without mutating observation order."""
+    array = finite_values(values)
+    scale = float(np.max(np.abs(array)))
+    return float(np.median(array / scale) * scale) if scale else 0.0
