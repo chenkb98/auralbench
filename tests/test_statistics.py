@@ -61,3 +61,11 @@ def test_median_invariants():
 
 def test_quantile_example():
     assert m.quantile([0, 10, 20, 30], 0.25) == pytest.approx(7.5)
+
+
+def test_quantile_boundaries():
+    for probability in [-1, 2, np.nan, np.inf]:
+        with pytest.raises(ValueError):
+            m.quantile([1, 2], probability)
+    assert m.quantile([5], 0.9) == 5
+    assert m.quantile([-1e308, 1e308], 0.5) == 0
