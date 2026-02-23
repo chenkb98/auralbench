@@ -69,3 +69,11 @@ def test_quantile_boundaries():
             m.quantile([1, 2], probability)
     assert m.quantile([5], 0.9) == 5
     assert m.quantile([-1e308, 1e308], 0.5) == 0
+
+
+def test_quantile_invariants():
+    x = [5, 1, 9, 3]
+    assert m.quantile(x, 0) == 1 and m.quantile(x, 1) == 9
+    assert m.quantile(x, 0.5) == pytest.approx(m.median(x))
+    values = [m.quantile(x, q) for q in np.linspace(0, 1, 21)]
+    assert all(a <= b for a, b in zip(values, values[1:]))
