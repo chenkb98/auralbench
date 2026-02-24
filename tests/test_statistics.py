@@ -77,3 +77,7 @@ def test_quantile_invariants():
     assert m.quantile(x, 0.5) == pytest.approx(m.median(x))
     values = [m.quantile(x, q) for q in np.linspace(0, 1, 21)]
     assert all(a <= b for a, b in zip(values, values[1:]))
+
+
+def test_trimmed_mean_example():
+    assert m.trimmed_mean([-100, 1, 2, 3, 100], 0.2) == pytest.approx(2)

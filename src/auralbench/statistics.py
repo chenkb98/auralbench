@@ -37,3 +37,12 @@ def quantile(values: ArrayLike, probability: float) -> float:
         raise ValueError("probability must be in [0, 1]")
     scale = float(np.max(np.abs(array)))
     return float(np.quantile(array / scale, probability, method="linear") * scale) if scale else 0.0
+
+
+def trimmed_mean(values: ArrayLike, fraction: float = 0.1) -> float:
+    """Drop floor(n*fraction) observations from both tails before averaging."""
+    array = np.sort(finite_values(values))
+    if not np.isfinite(fraction) or not 0 <= fraction < 0.5:
+        raise ValueError("trim fraction must be in [0, .5)")
+    count = int(len(array) * fraction)
+    return mean(array[count : len(array) - count])
