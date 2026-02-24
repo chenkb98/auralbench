@@ -81,3 +81,10 @@ def test_quantile_invariants():
 
 def test_trimmed_mean_example():
     assert m.trimmed_mean([-100, 1, 2, 3, 100], 0.2) == pytest.approx(2)
+
+
+def test_trimmed_mean_boundaries():
+    for fraction in [-1, 0.5, 1, np.nan]:
+        with pytest.raises(ValueError):
+            m.trimmed_mean([1, 2], fraction)
+    assert m.trimmed_mean([7], 0.49) == 7
