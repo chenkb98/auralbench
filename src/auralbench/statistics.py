@@ -46,3 +46,39 @@ def trimmed_mean(values: ArrayLike, fraction: float = 0.1) -> float:
         raise ValueError("trim fraction must be in [0, .5)")
     count = int(len(array) * fraction)
     return mean(array[count : len(array) - count])
+
+
+def _sampling(samples: int, seed: int, count: int):
+    if (
+        isinstance(samples, bool)
+        or not isinstance(samples, int)
+        or not 1 <= samples <= 100000
+        or samples * count > 10000000
+    ):
+        raise ValueError("invalid resample count or allocation")
+    if isinstance(seed, bool) or not isinstance(seed, int) or not 0 <= seed < 2**63:
+        raise ValueError("invalid seed")
+    return np.random.default_rng(seed)
+
+
+def bootstrap_mean(
+    values: ArrayLike, confidence: float = 0.95, samples: int = 1000, seed: int = 0
+) -> dict:
+    """Percentile bootstrap confidence interval for independent observations."""
+    array = finite_values(values)
+    if not np.isfinite(confidence) or not 0 < confidence < 1:
+        raise ValueError("confidence must be in (0, 1)")
+    rng = _sampling(samples, seed, len(array))
+    indices = rng.integers(0, len(array), (samples, len(array)))
+    scale = float(np.max(np.abs(array)))
+    means = np.mean(array[indices] / scale, axis=1) * scale if scale else np.zeros(samples)
+    tail = (1 - confidence) / 2
+    return {
+        "mean": mean(array),
+        "lower": quantile(means, tail),
+        "upper": quantile(means, 1 - tail),
+        "confidence": confidence,
+        "samples": samples,
+        "seed": seed,
+        "n": len(array),
+    }

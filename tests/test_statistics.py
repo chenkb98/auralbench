@@ -95,3 +95,8 @@ def test_trimmed_mean_invariants():
     assert m.trimmed_mean(x, 0) == pytest.approx(m.mean(x))
     assert m.trimmed_mean(x, 0.2) == m.trimmed_mean(x[::-1], 0.2)
     assert m.trimmed_mean(np.array(x) + 10, 0.2) == pytest.approx(12)
+
+
+def test_bootstrap_mean_example():
+    result = m.bootstrap_mean([2, 2, 2], samples=100)
+    assert result["lower"] == result["upper"] == result["mean"] == 2
