@@ -88,3 +88,10 @@ def test_trimmed_mean_boundaries():
         with pytest.raises(ValueError):
             m.trimmed_mean([1, 2], fraction)
     assert m.trimmed_mean([7], 0.49) == 7
+
+
+def test_trimmed_mean_invariants():
+    x = [-9, 1, 2, 3, 20]
+    assert m.trimmed_mean(x, 0) == pytest.approx(m.mean(x))
+    assert m.trimmed_mean(x, 0.2) == m.trimmed_mean(x[::-1], 0.2)
+    assert m.trimmed_mean(np.array(x) + 10, 0.2) == pytest.approx(12)
