@@ -113,3 +113,13 @@ def test_bootstrap_mean_boundaries():
         with pytest.raises(ValueError):
             m.bootstrap_mean([1, 2], **kwargs)
     assert m.bootstrap_mean([5], samples=10)["lower"] == 5
+
+
+def test_bootstrap_mean_invariants():
+    x = [1.0, 2.0, 3.0, 4.0]
+    a = m.bootstrap_mean(x, samples=100, seed=7)
+    assert a == m.bootstrap_mean(x, samples=100, seed=7)
+    b = m.bootstrap_mean(np.array(x) + 10, samples=100, seed=7)
+    for key in ["mean", "lower", "upper"]:
+        assert b[key] == pytest.approx(a[key] + 10)
+    assert set(a) == {"mean", "lower", "upper", "confidence", "samples", "seed", "n"}
