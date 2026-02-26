@@ -123,3 +123,7 @@ def test_bootstrap_mean_invariants():
     for key in ["mean", "lower", "upper"]:
         assert b[key] == pytest.approx(a[key] + 10)
     assert set(a) == {"mean", "lower", "upper", "confidence", "samples", "seed", "n"}
+
+
+def test_paired_difference_example():
+    np.testing.assert_array_equal(m.paired_difference([1, 3], [2, 1]), [-1, 2])

@@ -82,3 +82,11 @@ def bootstrap_mean(
         "seed": seed,
         "n": len(array),
     }
+
+
+def paired_difference(candidate: ArrayLike, baseline: ArrayLike) -> NDArray[np.float64]:
+    """Return candidate-minus-baseline differences with strict pairing."""
+    a, b = finite_values(candidate), finite_values(baseline)
+    if a.shape != b.shape:
+        raise ValueError("paired observations must have equal lengths")
+    return finite_values(a - b)
