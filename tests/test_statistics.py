@@ -100,3 +100,16 @@ def test_trimmed_mean_invariants():
 def test_bootstrap_mean_example():
     result = m.bootstrap_mean([2, 2, 2], samples=100)
     assert result["lower"] == result["upper"] == result["mean"] == 2
+
+
+def test_bootstrap_mean_boundaries():
+    for kwargs in [
+        {"confidence": 0},
+        {"confidence": 1},
+        {"samples": 0},
+        {"seed": -1},
+        {"samples": True},
+    ]:
+        with pytest.raises(ValueError):
+            m.bootstrap_mean([1, 2], **kwargs)
+    assert m.bootstrap_mean([5], samples=10)["lower"] == 5
