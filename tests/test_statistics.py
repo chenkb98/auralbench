@@ -136,3 +136,10 @@ def test_paired_difference_boundaries():
         m.paired_difference([], [])
     with pytest.raises(ValueError):
         m.paired_difference([np.nan], [1])
+
+
+def test_paired_difference_invariants():
+    a, b = [1, 2, 4], [2, 1, 3]
+    np.testing.assert_array_equal(m.paired_difference(a, b), -m.paired_difference(b, a))
+    np.testing.assert_array_equal(m.paired_difference(a, a), [0, 0, 0])
+    assert m.mean(m.paired_difference(a, b)) == pytest.approx(m.mean(a) - m.mean(b))
