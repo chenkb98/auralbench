@@ -127,3 +127,12 @@ def test_bootstrap_mean_invariants():
 
 def test_paired_difference_example():
     np.testing.assert_array_equal(m.paired_difference([1, 3], [2, 1]), [-1, 2])
+
+
+def test_paired_difference_boundaries():
+    with pytest.raises(ValueError):
+        m.paired_difference([1], [1, 2])
+    with pytest.raises(ValueError):
+        m.paired_difference([], [])
+    with pytest.raises(ValueError):
+        m.paired_difference([np.nan], [1])
