@@ -90,3 +90,27 @@ def paired_difference(candidate: ArrayLike, baseline: ArrayLike) -> NDArray[np.f
     if a.shape != b.shape:
         raise ValueError("paired observations must have equal lengths")
     return finite_values(a - b)
+
+
+def permutation_test(
+    candidate: ArrayLike, baseline: ArrayLike, samples: int = 1000, seed: int = 0
+) -> dict:
+    """Monte Carlo paired sign-flip test with a plus-one p-value correction."""
+    difference = paired_difference(candidate, baseline)
+    rng = _sampling(samples, seed, len(difference))
+    observed = abs(mean(difference))
+    signs = rng.choice([-1.0, 1.0], size=(samples, len(difference)))
+    scale = float(np.max(np.abs(difference)))
+    null = (
+        np.abs(np.mean(signs * (difference / scale), axis=1) * scale)
+        if scale
+        else np.zeros(samples)
+    )
+    extreme = int(np.count_nonzero(null >= np.nextafter(observed, -np.inf)))
+    return {
+        "statistic": observed,
+        "p_value": (extreme + 1) / (samples + 1),
+        "samples": samples,
+        "seed": seed,
+        "n": len(difference),
+    }

@@ -143,3 +143,7 @@ def test_paired_difference_invariants():
     np.testing.assert_array_equal(m.paired_difference(a, b), -m.paired_difference(b, a))
     np.testing.assert_array_equal(m.paired_difference(a, a), [0, 0, 0])
     assert m.mean(m.paired_difference(a, b)) == pytest.approx(m.mean(a) - m.mean(b))
+
+
+def test_permutation_test_example():
+    assert m.permutation_test([1, 2], [1, 2], samples=100)["p_value"] == 1
