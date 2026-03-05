@@ -147,3 +147,11 @@ def test_paired_difference_invariants():
 
 def test_permutation_test_example():
     assert m.permutation_test([1, 2], [1, 2], samples=100)["p_value"] == 1
+
+
+def test_permutation_test_boundaries():
+    with pytest.raises(ValueError):
+        m.permutation_test([1], [1, 2])
+    with pytest.raises(ValueError):
+        m.permutation_test([1], [0], samples=0)
+    assert m.permutation_test([2], [1], samples=10)["p_value"] == 1
