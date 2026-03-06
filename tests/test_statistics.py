@@ -155,3 +155,11 @@ def test_permutation_test_boundaries():
     with pytest.raises(ValueError):
         m.permutation_test([1], [0], samples=0)
     assert m.permutation_test([2], [1], samples=10)["p_value"] == 1
+
+
+def test_permutation_test_invariants():
+    a, b = [2, 3, 4, 5, 6], [1, 1, 1, 1, 1]
+    left = m.permutation_test(a, b, samples=200, seed=5)
+    assert left == m.permutation_test(a, b, samples=200, seed=5)
+    assert left == m.permutation_test(b, a, samples=200, seed=5)
+    assert 0 < left["p_value"] <= 1
