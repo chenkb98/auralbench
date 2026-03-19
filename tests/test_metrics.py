@@ -23,3 +23,7 @@ def test_si_sdr_invariants():
         assert m.si_sdr(a, b * scale) == pytest.approx(value)
     np.testing.assert_array_equal(a, [1, -1, 0.5, -0.5])
     np.testing.assert_array_equal(b, [0.9, -0.8, 0.6, -0.7])
+
+
+def test_log_spectral_distance_example():
+    assert m.log_spectral_distance([1], [0.1], 8000) == pytest.approx(20)
