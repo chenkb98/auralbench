@@ -48,3 +48,10 @@ def log_spectral_distance(
         return 0.0
     difference = 20 * (np.log10(np.maximum(left, epsilon)) - np.log10(np.maximum(right, epsilon)))
     return audio.rms(difference)
+
+
+def duration_error(
+    reference: ArrayLike, reference_rate: int, estimate: ArrayLike, estimate_rate: int
+) -> float:
+    """Signed duration difference in seconds: estimate minus reference."""
+    return audio.duration(estimate, estimate_rate) - audio.duration(reference, reference_rate)

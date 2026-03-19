@@ -43,3 +43,7 @@ def test_log_spectral_distance_invariants():
     assert m.log_spectral_distance(a, a, 8000) == 0
     assert m.log_spectral_distance(a, b, 8000) == pytest.approx(m.log_spectral_distance(b, a, 8000))
     assert m.log_spectral_distance(a, b, 8000) >= 0
+
+
+def test_duration_error_example():
+    assert m.duration_error([0] * 8, 8, [0] * 12, 8) == 0.5
