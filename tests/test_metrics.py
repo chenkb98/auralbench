@@ -36,3 +36,10 @@ def test_log_spectral_distance_boundaries():
         m.log_spectral_distance([1], [1, 2], 8000)
     with pytest.raises(ValueError):
         m.log_spectral_distance([1], [1], 8000, 0)
+
+
+def test_log_spectral_distance_invariants():
+    a, b = [1.0, 0, -1, 0], [0.8, 0.1, -0.7, -0.2]
+    assert m.log_spectral_distance(a, a, 8000) == 0
+    assert m.log_spectral_distance(a, b, 8000) == pytest.approx(m.log_spectral_distance(b, a, 8000))
+    assert m.log_spectral_distance(a, b, 8000) >= 0
