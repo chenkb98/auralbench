@@ -27,3 +27,12 @@ def test_si_sdr_invariants():
 
 def test_log_spectral_distance_example():
     assert m.log_spectral_distance([1], [0.1], 8000) == pytest.approx(20)
+
+
+def test_log_spectral_distance_boundaries():
+    assert m.log_spectral_distance([], [], 8000) == 0
+    assert m.log_spectral_distance([0], [0], 8000) == 0
+    with pytest.raises(ValueError):
+        m.log_spectral_distance([1], [1, 2], 8000)
+    with pytest.raises(ValueError):
+        m.log_spectral_distance([1], [1], 8000, 0)
