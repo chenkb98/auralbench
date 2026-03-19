@@ -55,3 +55,10 @@ def test_duration_error_boundaries():
         m.duration_error([0], 0, [0], 8000)
     with pytest.raises(ValueError):
         m.duration_error([0], 8000, [np.nan], 8000)
+
+
+def test_duration_error_invariants():
+    assert m.duration_error(np.zeros((800, 2)), 8000, np.zeros((1600, 1)), 16000) == 0
+    a = m.duration_error([0] * 10, 10, [0] * 5, 10)
+    b = m.duration_error([0] * 5, 10, [0] * 10, 10)
+    assert a == -b == -0.5
