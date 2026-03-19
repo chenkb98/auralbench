@@ -47,3 +47,11 @@ def test_log_spectral_distance_invariants():
 
 def test_duration_error_example():
     assert m.duration_error([0] * 8, 8, [0] * 12, 8) == 0.5
+
+
+def test_duration_error_boundaries():
+    assert m.duration_error([], 8000, [], 16000) == 0
+    with pytest.raises(ValueError):
+        m.duration_error([0], 0, [0], 8000)
+    with pytest.raises(ValueError):
+        m.duration_error([0], 8000, [np.nan], 8000)
