@@ -55,3 +55,18 @@ def duration_error(
 ) -> float:
     """Signed duration difference in seconds: estimate minus reference."""
     return audio.duration(estimate, estimate_rate) - audio.duration(reference, reference_rate)
+
+
+def score_transcript(reference: str, hypothesis: str) -> dict:
+    """Report WER/CER alongside the complete compact word error counts."""
+    alignment = text.edit_alignment(text.word_tokens(reference), text.word_tokens(hypothesis))
+    return {
+        "wer": alignment["distance"] / max(1, alignment["reference_length"]),
+        "cer": text.character_error_rate(reference, hypothesis),
+        "matches": alignment["matches"],
+        "substitutions": alignment["substitutions"],
+        "deletions": alignment["deletions"],
+        "insertions": alignment["insertions"],
+        "reference_words": alignment["reference_length"],
+        "hypothesis_words": alignment["hypothesis_length"],
+    }

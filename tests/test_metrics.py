@@ -62,3 +62,8 @@ def test_duration_error_invariants():
     a = m.duration_error([0] * 10, 10, [0] * 5, 10)
     b = m.duration_error([0] * 5, 10, [0] * 10, 10)
     assert a == -b == -0.5
+
+
+def test_score_transcript_example():
+    value = m.score_transcript("one two", "one red two")
+    assert value["wer"] == 0.5 and value["insertions"] == 1 and value["matches"] == 2
