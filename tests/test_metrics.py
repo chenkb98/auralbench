@@ -67,3 +67,11 @@ def test_duration_error_invariants():
 def test_score_transcript_example():
     value = m.score_transcript("one two", "one red two")
     assert value["wer"] == 0.5 and value["insertions"] == 1 and value["matches"] == 2
+
+
+def test_score_transcript_boundaries():
+    value = m.score_transcript("", "one two")
+    assert value["wer"] == 2 and value["reference_words"] == 0 and value["insertions"] == 2
+    assert m.score_transcript("", "")["wer"] == 0
+    with pytest.raises(ValueError):
+        m.score_transcript(None, "text")
