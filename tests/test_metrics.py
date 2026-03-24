@@ -75,3 +75,27 @@ def test_score_transcript_boundaries():
     assert m.score_transcript("", "")["wer"] == 0
     with pytest.raises(ValueError):
         m.score_transcript(None, "text")
+
+
+def test_score_transcript_invariants():
+    expected = {
+        "wer",
+        "cer",
+        "matches",
+        "substitutions",
+        "deletions",
+        "insertions",
+        "reference_words",
+        "hypothesis_words",
+    }
+    for reference, hypothesis in [("one two", "one"), ("a", "b"), ("", "a"), ("你好", "你好")]:
+        value = m.score_transcript(reference, hypothesis)
+        assert set(value) == expected
+        assert (
+            value["matches"] + value["substitutions"] + value["deletions"]
+            == value["reference_words"]
+        )
+        assert (
+            value["matches"] + value["substitutions"] + value["insertions"]
+            == value["hypothesis_words"]
+        )
