@@ -70,3 +70,21 @@ def score_transcript(reference: str, hypothesis: str) -> dict:
         "reference_words": alignment["reference_length"],
         "hypothesis_words": alignment["hypothesis_length"],
     }
+
+
+def score_audio(reference: ArrayLike, estimate: ArrayLike, rate: int) -> dict:
+    """Compute paired signal diagnostics without automatic alignment or resampling."""
+    a, b = audio.as_audio(reference), audio.as_audio(estimate)
+    rate = audio.sample_rate(rate)
+    if a.shape != b.shape:
+        raise ValueError("paired audio shapes must match")
+    return {
+        "snr_db": audio.snr(a, b),
+        "si_sdr_db": si_sdr(a, b),
+        "spectral_distance_db": log_spectral_distance(a, b, rate),
+        "rmse": audio.rms(a - b),
+        "reference_peak": audio.peak(a),
+        "estimate_peak": audio.peak(b),
+        "clipping_fraction": audio.clipping_fraction(b),
+        "duration_seconds": audio.duration(a, rate),
+    }

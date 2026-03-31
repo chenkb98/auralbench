@@ -99,3 +99,8 @@ def test_score_transcript_invariants():
             value["matches"] + value["substitutions"] + value["insertions"]
             == value["hypothesis_words"]
         )
+
+
+def test_score_audio_example():
+    value = m.score_audio([0.5, -0.5], [0.5, -0.5], 8000)
+    assert value["rmse"] == value["spectral_distance_db"] == 0 and value["snr_db"] == 120
