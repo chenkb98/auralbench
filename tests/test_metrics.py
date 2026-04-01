@@ -114,3 +114,20 @@ def test_score_audio_boundaries():
     with pytest.raises(ValueError):
         m.score_audio([1], [1], 0)
     assert m.score_audio([], [], 8000)["duration_seconds"] == 0
+
+
+def test_score_audio_invariants():
+    expected = {
+        "snr_db",
+        "si_sdr_db",
+        "spectral_distance_db",
+        "rmse",
+        "reference_peak",
+        "estimate_peak",
+        "clipping_fraction",
+        "duration_seconds",
+    }
+    for a, b in [([0], [0]), ([0], [1]), ([1, -1], [0.9, -0.9])]:
+        value = m.score_audio(a, b, 8000)
+        assert set(value) == expected and all(np.isfinite(item) for item in value.values())
+    assert m.score_audio([1], [2], 8000)["clipping_fraction"] == 1
