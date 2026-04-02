@@ -77,3 +77,39 @@ def records_encode(records: list[dict]) -> str:
     if len(result) > 20000000:
         raise ValueError("manifest exceeds twenty million characters")
     return result
+
+
+def _json(text: str):
+    import json
+
+    def pairs(items):
+        value = {}
+        for key, item in items:
+            if key in value:
+                raise ValueError("duplicate JSON field")
+            value[key] = item
+        return value
+
+    def constant(value):
+        raise ValueError("non-finite JSON constant")
+
+    return json.loads(text, object_pairs_hook=pairs, parse_constant=constant)
+
+
+def records_decode(payload: str) -> list[dict]:
+    """Read complete JSONL records with line-numbered validation failures."""
+    if not isinstance(payload, str) or len(payload) > 20000000:
+        raise ValueError("invalid dataset payload")
+    result = []
+    for index, line in enumerate(payload.splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            raw = _json(line)
+            value = record(raw)
+            if set(raw) != set(value):
+                raise ValueError("persisted records require all schema fields")
+            result.append(value)
+        except (ValueError, TypeError) as error:
+            raise ValueError(f"invalid dataset line {index}: {error}") from error
+    return _records(result)

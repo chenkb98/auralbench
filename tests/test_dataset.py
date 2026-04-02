@@ -59,3 +59,8 @@ def test_records_encode_invariants():
         m.record(value) for value in values
     ]
     assert encoded == m.records_encode([dict(reversed(list(value.items()))) for value in values])
+
+
+def test_records_decode_example():
+    values = [m.record({"id": "a", "reference_text": "你好"})]
+    assert m.records_decode(m.records_encode(values)) == values
