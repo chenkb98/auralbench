@@ -40,3 +40,11 @@ def test_record_invariants():
 
 def test_records_encode_example():
     assert m.records_encode([{"id": "a"}]).endswith("\n")
+
+
+def test_records_encode_boundaries():
+    assert m.records_encode([]) == ""
+    with pytest.raises(ValueError):
+        m.records_encode([{"id": "x"}, {"id": "x"}])
+    with pytest.raises(ValueError):
+        m.records_encode([{"id": "x", "reference_text": np.nan}])
