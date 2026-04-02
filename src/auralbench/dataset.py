@@ -51,3 +51,29 @@ def record(value: dict) -> dict:
     if (result["reference_audio"] is None) != (result["candidate_audio"] is None):
         raise ValueError("audio paths must be paired")
     return result
+
+
+def _records(values: list[dict]) -> list[dict]:
+    if not isinstance(values, list) or len(values) > 100000:
+        raise ValueError("dataset must be a bounded record list")
+    result = [record(value) for value in values]
+    if len({value["id"] for value in result}) != len(result):
+        raise ValueError("duplicate record IDs")
+    return result
+
+
+def records_encode(records: list[dict]) -> str:
+    """Write normalized, unique records as deterministic JSONL."""
+    import json
+
+    values = _records(records)
+    result = "".join(
+        json.dumps(
+            value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False
+        )
+        + "\n"
+        for value in values
+    )
+    if len(result) > 20000000:
+        raise ValueError("manifest exceeds twenty million characters")
+    return result

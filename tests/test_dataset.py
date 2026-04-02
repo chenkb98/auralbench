@@ -36,3 +36,7 @@ def test_record_invariants():
     for path in ["/a.wav", "C:/a.wav", "../a.wav", "a/../../b.wav"]:
         with pytest.raises(ValueError):
             m.record({"id": "x", "reference_audio": path, "candidate_audio": "b.wav"})
+
+
+def test_records_encode_example():
+    assert m.records_encode([{"id": "a"}]).endswith("\n")
