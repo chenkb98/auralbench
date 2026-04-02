@@ -48,3 +48,14 @@ def test_records_encode_boundaries():
         m.records_encode([{"id": "x"}, {"id": "x"}])
     with pytest.raises(ValueError):
         m.records_encode([{"id": "x", "reference_text": np.nan}])
+
+
+def test_records_encode_invariants():
+    import json
+
+    values = [{"id": "a", "reference_text": "你好"}, {"id": "b"}]
+    encoded = m.records_encode(values)
+    assert [json.loads(line) for line in encoded.splitlines()] == [
+        m.record(value) for value in values
+    ]
+    assert encoded == m.records_encode([dict(reversed(list(value.items()))) for value in values])
