@@ -19,3 +19,20 @@ def test_record_boundaries():
     ]:
         with pytest.raises(ValueError):
             m.record(value)
+
+
+def test_record_invariants():
+    value = m.record({"id": "x", "reference_text": "你好", "hypothesis_text": "你好"})
+    assert set(value) == {
+        "id",
+        "reference_text",
+        "hypothesis_text",
+        "reference_audio",
+        "candidate_audio",
+        "speaker",
+        "split",
+    }
+    assert m.record(value) == value
+    for path in ["/a.wav", "C:/a.wav", "../a.wav", "a/../../b.wav"]:
+        with pytest.raises(ValueError):
+            m.record({"id": "x", "reference_audio": path, "candidate_audio": "b.wav"})
