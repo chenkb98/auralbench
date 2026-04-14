@@ -64,3 +64,10 @@ def test_records_encode_invariants():
 def test_records_decode_example():
     values = [m.record({"id": "a", "reference_text": "你好"})]
     assert m.records_decode(m.records_encode(values)) == values
+
+
+def test_records_decode_boundaries():
+    for text in ["null", "{}", '{"id":"x"}', '{"id":"x","id":"y"}', '{"value":NaN}']:
+        with pytest.raises(ValueError):
+            m.records_decode(text)
+    assert m.records_decode(" \n\n") == []
