@@ -71,3 +71,13 @@ def test_records_decode_boundaries():
         with pytest.raises(ValueError):
             m.records_decode(text)
     assert m.records_decode(" \n\n") == []
+
+
+def test_records_decode_invariants():
+    values = [m.record({"id": "a"}), m.record({"id": "b"})]
+    encoded = m.records_encode(values)
+    assert m.records_encode(m.records_decode(encoded)) == encoded
+    with pytest.raises(ValueError, match="duplicate record IDs"):
+        m.records_decode(encoded + encoded)
+    with pytest.raises(ValueError, match="line 2"):
+        m.records_decode(m.records_encode(values[:1]) + "bad")
