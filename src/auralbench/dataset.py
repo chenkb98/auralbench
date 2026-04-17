@@ -152,3 +152,21 @@ def speaker_split(
         split = assignment[group]
         result[split].append(dict(value, split=split))
     return result
+
+
+def shard_records(records: list[dict], index: int, count: int) -> list[dict]:
+    """Select a stable SHA-256 ID shard while preserving input order."""
+    import hashlib
+
+    values = _records(records)
+    if (
+        any(isinstance(value, bool) or not isinstance(value, int) for value in [index, count])
+        or not 1 <= count <= 1024
+        or not 0 <= index < count
+    ):
+        raise ValueError("invalid shard index/count")
+    return [
+        value
+        for value in values
+        if int(hashlib.sha256(value["id"].encode()).hexdigest(), 16) % count == index
+    ]

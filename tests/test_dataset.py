@@ -109,3 +109,8 @@ def test_speaker_split_invariants():
             seen[value["speaker"]] = split
             assert value["split"] == split
     assert sum(map(len, result.values())) == len(values)
+
+
+def test_shard_records_example():
+    values = [{"id": str(i)} for i in range(10)]
+    assert len(m.shard_records(values, 0, 1)) == 10
