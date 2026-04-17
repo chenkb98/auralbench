@@ -81,3 +81,9 @@ def test_records_decode_invariants():
         m.records_decode(encoded + encoded)
     with pytest.raises(ValueError, match="line 2"):
         m.records_decode(m.records_encode(values[:1]) + "bad")
+
+
+def test_speaker_split_example():
+    values = [{"id": str(i), "speaker": str(i // 2)} for i in range(8)]
+    result = m.speaker_split(values, 0.5, 0.25, 3)
+    assert [len(result[key]) for key in ["train", "validation", "test"]] == [4, 2, 2]

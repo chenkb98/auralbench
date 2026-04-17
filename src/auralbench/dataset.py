@@ -113,3 +113,42 @@ def records_decode(payload: str) -> list[dict]:
         except (ValueError, TypeError) as error:
             raise ValueError(f"invalid dataset line {index}: {error}") from error
     return _records(result)
+
+
+def speaker_split(
+    records: list[dict],
+    train_fraction: float = 0.8,
+    validation_fraction: float = 0.1,
+    seed: int = 0,
+) -> dict:
+    """Assign whole speakers to reproducible train/validation/test partitions."""
+    values = _records(records)
+    if (
+        not np.isfinite([train_fraction, validation_fraction]).all()
+        or min(train_fraction, validation_fraction) < 0
+        or train_fraction + validation_fraction > 1
+    ):
+        raise ValueError("invalid split fractions")
+    if isinstance(seed, bool) or not isinstance(seed, int) or not 0 <= seed < 2**63:
+        raise ValueError("invalid seed")
+    groups = sorted(
+        {
+            ("speaker:" + value["speaker"]) if value["speaker"] else ("record:" + value["id"])
+            for value in values
+        }
+    )
+    np.random.default_rng(seed).shuffle(groups)
+    first, second = (
+        int(len(groups) * train_fraction),
+        int(len(groups) * (train_fraction + validation_fraction)),
+    )
+    assignment = {
+        group: "train" if i < first else "validation" if i < second else "test"
+        for i, group in enumerate(groups)
+    }
+    result: dict[str, list[dict]] = {"train": [], "validation": [], "test": []}
+    for value in values:
+        group = "speaker:" + value["speaker"] if value["speaker"] else "record:" + value["id"]
+        split = assignment[group]
+        result[split].append(dict(value, split=split))
+    return result
