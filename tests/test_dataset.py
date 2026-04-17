@@ -96,3 +96,16 @@ def test_speaker_split_boundaries():
             m.speaker_split([], train, validation)
     with pytest.raises(ValueError):
         m.speaker_split([], seed=-1)
+
+
+def test_speaker_split_invariants():
+    values = [{"id": str(i), "speaker": "s" + str(i // 3)} for i in range(18)]
+    result = m.speaker_split(values, 0.5, 0.25, 11)
+    assert result == m.speaker_split(values, 0.5, 0.25, 11)
+    seen = {}
+    for split, records in result.items():
+        for value in records:
+            assert value["speaker"] not in seen or seen[value["speaker"]] == split
+            seen[value["speaker"]] = split
+            assert value["split"] == split
+    assert sum(map(len, result.values())) == len(values)
