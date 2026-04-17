@@ -87,3 +87,12 @@ def test_speaker_split_example():
     values = [{"id": str(i), "speaker": str(i // 2)} for i in range(8)]
     result = m.speaker_split(values, 0.5, 0.25, 3)
     assert [len(result[key]) for key in ["train", "validation", "test"]] == [4, 2, 2]
+
+
+def test_speaker_split_boundaries():
+    assert m.speaker_split([]) == {"train": [], "validation": [], "test": []}
+    for train, validation in [(-1, 0.1), (0.9, 0.2), (np.nan, 0.1)]:
+        with pytest.raises(ValueError):
+            m.speaker_split([], train, validation)
+    with pytest.raises(ValueError):
+        m.speaker_split([], seed=-1)
