@@ -134,3 +134,9 @@ def test_shard_records_invariants():
 
 def test_dataset_digest_example():
     assert len(m.dataset_digest([{"id": "a"}])) == 64
+
+
+def test_dataset_digest_boundaries():
+    assert len(m.dataset_digest([])) == 64
+    with pytest.raises(ValueError):
+        m.dataset_digest([{"id": "a"}, {"id": "a"}])
