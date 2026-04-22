@@ -130,3 +130,7 @@ def test_shard_records_invariants():
         ids = [value["id"] for shard in shards for value in shard]
         assert len(ids) == len(set(ids)) == len(values)
         assert set(ids) == {value["id"] for value in values}
+
+
+def test_dataset_digest_example():
+    assert len(m.dataset_digest([{"id": "a"}])) == 64

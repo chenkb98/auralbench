@@ -170,3 +170,11 @@ def shard_records(records: list[dict], index: int, count: int) -> list[dict]:
         for value in values
         if int(hashlib.sha256(value["id"].encode()).hexdigest(), 16) % count == index
     ]
+
+
+def dataset_digest(records: list[dict]) -> str:
+    """Hash the complete normalized record definitions independently of order."""
+    import hashlib
+
+    values = sorted(_records(records), key=lambda value: value["id"])
+    return hashlib.sha256(records_encode(values).encode("utf-8")).hexdigest()
