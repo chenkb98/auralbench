@@ -140,3 +140,12 @@ def test_dataset_digest_boundaries():
     assert len(m.dataset_digest([])) == 64
     with pytest.raises(ValueError):
         m.dataset_digest([{"id": "a"}, {"id": "a"}])
+
+
+def test_dataset_digest_invariants():
+    values = [{"id": "a", "reference_text": "one"}, {"id": "b"}]
+    assert m.dataset_digest(values) == m.dataset_digest(values[::-1])
+    assert m.dataset_digest(values) != m.dataset_digest(
+        [dict(values[0], reference_text="two"), values[1]]
+    )
+    assert m.dataset_digest(values) == m.dataset_digest([m.record(value) for value in values])
