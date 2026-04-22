@@ -114,3 +114,10 @@ def test_speaker_split_invariants():
 def test_shard_records_example():
     values = [{"id": str(i)} for i in range(10)]
     assert len(m.shard_records(values, 0, 1)) == 10
+
+
+def test_shard_records_boundaries():
+    for index, count in [(-1, 2), (2, 2), (0, 0), (True, 2), (0, 1025)]:
+        with pytest.raises(ValueError):
+            m.shard_records([], index, count)
+    assert m.shard_records([], 0, 2) == []
