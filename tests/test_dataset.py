@@ -121,3 +121,12 @@ def test_shard_records_boundaries():
         with pytest.raises(ValueError):
             m.shard_records([], index, count)
     assert m.shard_records([], 0, 2) == []
+
+
+def test_shard_records_invariants():
+    values = [{"id": str(i)} for i in range(31)]
+    for count in range(1, 8):
+        shards = [m.shard_records(values, index, count) for index in range(count)]
+        ids = [value["id"] for shard in shards for value in shard]
+        assert len(ids) == len(set(ids)) == len(values)
+        assert set(ids) == {value["id"] for value in values}
