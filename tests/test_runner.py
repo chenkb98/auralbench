@@ -52,3 +52,13 @@ def test_evaluate_dataset_boundaries():
     with pytest.raises(ValueError):
         m.evaluate_dataset([{"id": "b"}], resume=run)
     assert m.evaluate_dataset([])["results"] == []
+
+
+def test_evaluate_dataset_invariants():
+    values = [{"id": "a"}, {"id": "b"}, {"id": "c"}]
+    full = m.evaluate_dataset(values)
+    partial = dict(full, results=full["results"][:1])
+    assert m.evaluate_dataset(values, resume=partial) == full
+    reversed_run = m.evaluate_dataset(values[::-1], resume=full)
+    assert [row["id"] for row in reversed_run["results"]] == ["c", "b", "a"]
+    assert set(full) == {"schema_version", "dataset_sha256", "results"}
