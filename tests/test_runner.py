@@ -36,3 +36,10 @@ def test_evaluate_record_invariants():
         (root / "b.wav").write_bytes(audio.wav_encode([0.25, -0.25], 8000))
         second = m.evaluate_record(record, temporary, first)
         assert second["input_sha256"] != first["input_sha256"] and second["audio"]["rmse"] > 0
+
+
+def test_evaluate_dataset_example():
+    value = m.evaluate_dataset(
+        [{"id": "a"}, {"id": "b", "reference_text": "x", "hypothesis_text": "y"}]
+    )
+    assert [row["id"] for row in value["results"]] == ["a", "b"]

@@ -129,3 +129,35 @@ def evaluate_record(record: dict, root: str = ".", cached: dict | None = None) -
             "audio": signal,
         }
     )
+
+
+def _run(value: dict) -> dict:
+    if (
+        not isinstance(value, dict)
+        or set(value) != {"schema_version", "dataset_sha256", "results"}
+        or type(value["schema_version"]) is not int
+        or value["schema_version"] != 1
+    ):
+        raise ValueError("invalid run schema")
+    _digest(value["dataset_sha256"])
+    if not isinstance(value["results"], list) or len(value["results"]) > 100000:
+        raise ValueError("invalid result list")
+    results = [_result(item) for item in value["results"]]
+    if len({item["id"] for item in results}) != len(results):
+        raise ValueError("duplicate result IDs")
+    return dict(value, results=results)
+
+
+def evaluate_dataset(records: list[dict], root: str = ".", resume: dict | None = None) -> dict:
+    """Evaluate in manifest order, optionally resuming a validated partial run."""
+    values, checksum = dataset._records(records), dataset.dataset_digest(records)
+    cached = {}
+    if resume is not None:
+        prior = _run(resume)
+        if prior["dataset_sha256"] != checksum:
+            raise ValueError("resume belongs to a different dataset definition")
+        cached = {value["id"]: value for value in prior["results"]}
+        if set(cached) - {value["id"] for value in values}:
+            raise ValueError("resume contains unknown record IDs")
+    results = [evaluate_record(value, root, cached.get(value["id"])) for value in values]
+    return {"schema_version": 1, "dataset_sha256": checksum, "results": results}
