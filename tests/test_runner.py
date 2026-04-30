@@ -43,3 +43,12 @@ def test_evaluate_dataset_example():
         [{"id": "a"}, {"id": "b", "reference_text": "x", "hypothesis_text": "y"}]
     )
     assert [row["id"] for row in value["results"]] == ["a", "b"]
+
+
+def test_evaluate_dataset_boundaries():
+    with pytest.raises(ValueError):
+        m.evaluate_dataset([{"id": "a"}, {"id": "a"}])
+    run = m.evaluate_dataset([{"id": "a"}])
+    with pytest.raises(ValueError):
+        m.evaluate_dataset([{"id": "b"}], resume=run)
+    assert m.evaluate_dataset([])["results"] == []
