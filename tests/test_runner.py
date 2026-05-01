@@ -62,3 +62,16 @@ def test_evaluate_dataset_invariants():
     reversed_run = m.evaluate_dataset(values[::-1], resume=full)
     assert [row["id"] for row in reversed_run["results"]] == ["c", "b", "a"]
     assert set(full) == {"schema_version", "dataset_sha256", "results"}
+
+
+def test_aggregate_results_example():
+    run = m.evaluate_dataset(
+        [
+            {"id": "a", "reference_text": "one two", "hypothesis_text": "one"},
+            {"id": "b", "reference_text": "one", "hypothesis_text": ""},
+        ]
+    )
+    value = m.aggregate_results(run)
+    assert (
+        value["text"]["corpus_wer"] == pytest.approx(2 / 3) and value["text"]["macro_wer"] == 0.75
+    )

@@ -161,3 +161,29 @@ def evaluate_dataset(records: list[dict], root: str = ".", resume: dict | None =
             raise ValueError("resume contains unknown record IDs")
     results = [evaluate_record(value, root, cached.get(value["id"])) for value in values]
     return {"schema_version": 1, "dataset_sha256": checksum, "results": results}
+
+
+def aggregate_results(run: dict) -> dict:
+    """Report corpus and macro text error rates, plus per-metric audio intervals."""
+    rows = _run(run)["results"]
+    reference_words = sum(row["text"]["reference_words"] for row in rows)
+    errors = sum(
+        row["text"][key] for row in rows for key in ["substitutions", "deletions", "insertions"]
+    )
+    text_summary = {
+        "corpus_wer": errors / max(1, reference_words),
+        "macro_wer": statistics.mean([row["text"]["wer"] for row in rows]) if rows else None,
+        "macro_cer": statistics.mean([row["text"]["cer"] for row in rows]) if rows else None,
+        "reference_words": reference_words,
+        "hypothesis_words": sum(row["text"]["hypothesis_words"] for row in rows),
+    }
+    signal_rows = [row["audio"] for row in rows if row["audio"] is not None]
+    signal = (
+        {
+            key: statistics.bootstrap_mean([row[key] for row in signal_rows], samples=200, seed=0)
+            for key in sorted(_AUDIO_FIELDS)
+        }
+        if signal_rows
+        else {}
+    )
+    return {"count": len(rows), "text": text_summary, "audio": signal}
