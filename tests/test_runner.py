@@ -75,3 +75,10 @@ def test_aggregate_results_example():
     assert (
         value["text"]["corpus_wer"] == pytest.approx(2 / 3) and value["text"]["macro_wer"] == 0.75
     )
+
+
+def test_aggregate_results_boundaries():
+    empty = m.aggregate_results(m.evaluate_dataset([]))
+    assert empty["count"] == 0 and empty["text"]["macro_wer"] is None and empty["audio"] == {}
+    with pytest.raises(ValueError):
+        m.aggregate_results({})
