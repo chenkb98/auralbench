@@ -82,3 +82,14 @@ def test_aggregate_results_boundaries():
     assert empty["count"] == 0 and empty["text"]["macro_wer"] is None and empty["audio"] == {}
     with pytest.raises(ValueError):
         m.aggregate_results({})
+
+
+def test_aggregate_results_invariants():
+    values = [
+        {"id": "a", "reference_text": "a b", "hypothesis_text": "a"},
+        {"id": "b", "reference_text": "a", "hypothesis_text": "a"},
+    ]
+    summary = m.aggregate_results(m.evaluate_dataset(values))
+    assert summary == m.aggregate_results(m.evaluate_dataset(values[::-1]))
+    assert set(summary) == {"count", "text", "audio"}
+    assert summary["text"]["reference_words"] == 3
