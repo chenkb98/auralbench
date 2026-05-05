@@ -109,3 +109,14 @@ def test_report_json_boundaries():
     value["results"][0]["text"]["cer"] = np.nan
     with pytest.raises(ValueError):
         m.report_json(value)
+
+
+def test_report_json_invariants():
+    import json
+
+    run = m.evaluate_dataset([{"id": "a", "speaker": "说话人"}])
+    text = m.report_json(run)
+    assert text == m.report_json(run)
+    value = json.loads(text)
+    assert set(value) == {"schema_version", "dataset_sha256", "results", "summary"}
+    assert value["results"] == run["results"] and "说话人" in text
