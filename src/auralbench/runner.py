@@ -187,3 +187,20 @@ def aggregate_results(run: dict) -> dict:
         else {}
     )
     return {"count": len(rows), "text": text_summary, "audio": signal}
+
+
+def report_json(run: dict) -> str:
+    """Serialize an auditable report containing inputs, row scores and summaries."""
+    import json
+
+    value = _run(run)
+    return (
+        json.dumps(
+            dict(value, summary=aggregate_results(value)),
+            ensure_ascii=False,
+            sort_keys=True,
+            indent=2,
+            allow_nan=False,
+        )
+        + "\n"
+    )

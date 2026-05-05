@@ -93,3 +93,10 @@ def test_aggregate_results_invariants():
     assert summary == m.aggregate_results(m.evaluate_dataset(values[::-1]))
     assert set(summary) == {"count", "text", "audio"}
     assert summary["text"]["reference_words"] == 3
+
+
+def test_report_json_example():
+    import json
+
+    value = json.loads(m.report_json(m.evaluate_dataset([{"id": "a"}])))
+    assert value["summary"]["count"] == 1 and value["results"][0]["id"] == "a"
