@@ -100,3 +100,12 @@ def test_report_json_example():
 
     value = json.loads(m.report_json(m.evaluate_dataset([{"id": "a"}])))
     assert value["summary"]["count"] == 1 and value["results"][0]["id"] == "a"
+
+
+def test_report_json_boundaries():
+    with pytest.raises(ValueError):
+        m.report_json({})
+    value = m.evaluate_dataset([{"id": "a"}])
+    value["results"][0]["text"]["cer"] = np.nan
+    with pytest.raises(ValueError):
+        m.report_json(value)
