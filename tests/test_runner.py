@@ -127,3 +127,9 @@ def test_report_csv_example():
         m.report_csv(m.evaluate_dataset([{"id": "a"}])).splitlines()[0]
         == "id,speaker,split,wer,cer,snr_db,si_sdr_db,rmse"
     )
+
+
+def test_report_csv_boundaries():
+    assert len(m.report_csv(m.evaluate_dataset([])).splitlines()) == 1
+    with pytest.raises(ValueError):
+        m.report_csv({})
