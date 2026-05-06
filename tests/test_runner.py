@@ -120,3 +120,10 @@ def test_report_json_invariants():
     value = json.loads(text)
     assert set(value) == {"schema_version", "dataset_sha256", "results", "summary"}
     assert value["results"] == run["results"] and "说话人" in text
+
+
+def test_report_csv_example():
+    assert (
+        m.report_csv(m.evaluate_dataset([{"id": "a"}])).splitlines()[0]
+        == "id,speaker,split,wer,cer,snr_db,si_sdr_db,rmse"
+    )

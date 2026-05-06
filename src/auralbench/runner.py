@@ -204,3 +204,28 @@ def report_json(run: dict) -> str:
         )
         + "\n"
     )
+
+
+def report_csv(run: dict) -> str:
+    """Export a compact row comparison table using standard CSV quoting."""
+    import csv
+    import io
+
+    rows = _run(run)["results"]
+    buffer = io.StringIO(newline="")
+    fields = ["id", "speaker", "split", "wer", "cer", "snr_db", "si_sdr_db", "rmse"]
+    writer = csv.DictWriter(buffer, fieldnames=fields, lineterminator="\n")
+    writer.writeheader()
+    for row in rows:
+        signal = row["audio"] or {}
+        writer.writerow(
+            dict(
+                id=row["id"],
+                speaker=row["speaker"],
+                split=row["split"],
+                wer=row["text"]["wer"],
+                cer=row["text"]["cer"],
+                **{key: signal.get(key, "") for key in ["snr_db", "si_sdr_db", "rmse"]},
+            )
+        )
+    return buffer.getvalue()
