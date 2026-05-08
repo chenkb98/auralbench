@@ -133,3 +133,13 @@ def test_report_csv_boundaries():
     assert len(m.report_csv(m.evaluate_dataset([])).splitlines()) == 1
     with pytest.raises(ValueError):
         m.report_csv({})
+
+
+def test_report_csv_invariants():
+    import csv, io
+
+    speaker = '说话人, "A"'
+    value = m.evaluate_dataset([{"id": "a", "speaker": speaker}])
+    rows = list(csv.DictReader(io.StringIO(m.report_csv(value))))
+    assert rows[0]["speaker"] == speaker and rows[0]["id"] == "a"
+    assert rows[0]["snr_db"] == "" and float(rows[0]["wer"]) == 0
