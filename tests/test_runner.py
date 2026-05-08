@@ -143,3 +143,8 @@ def test_report_csv_invariants():
     rows = list(csv.DictReader(io.StringIO(m.report_csv(value))))
     assert rows[0]["speaker"] == speaker and rows[0]["id"] == "a"
     assert rows[0]["snr_db"] == "" and float(rows[0]["wer"]) == 0
+
+
+def test_report_html_example():
+    page = m.report_html(m.evaluate_dataset([{"id": "a"}]))
+    assert page.startswith("<!doctype html>") and "<table>" in page and "Corpus WER" in page

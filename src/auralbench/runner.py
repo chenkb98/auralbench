@@ -229,3 +229,41 @@ def report_csv(run: dict) -> str:
             )
         )
     return buffer.getvalue()
+
+
+def report_html(run: dict, title: str = "AuralBench report") -> str:
+    """Render a standalone escaped HTML report with no scripts or external requests."""
+    import html
+
+    if not isinstance(title, str) or len(title) > 200:
+        raise ValueError("title must be a bounded string")
+    value = _run(run)
+    summary = aggregate_results(value)
+    rows = []
+    for row in value["results"]:
+        cells = [
+            row["id"],
+            row["speaker"],
+            row["split"],
+            f"{row['text']['wer']:.4f}",
+            f"{row['text']['cer']:.4f}",
+        ]
+        rows.append(
+            "<tr>" + "".join("<td>" + html.escape(str(cell)) + "</td>" for cell in cells) + "</tr>"
+        )
+    heading = html.escape(title)
+    return (
+        '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>'
+        + heading
+        + "</title><style>body{font:16px system-ui;max-width:1000px;margin:48px auto;padding:0 24px;color:#17243b;background:#f7f8fc}h1{font-size:40px}table{border-collapse:collapse;width:100%;background:white}th,td{text-align:left;padding:12px;border-bottom:1px solid #ddd}code{overflow-wrap:anywhere}small{color:#53627a}</style><h1>"
+        + heading
+        + "</h1><p>Samples: "
+        + str(summary["count"])
+        + " · Corpus WER: "
+        + f"{summary['text']['corpus_wer']:.4f}"
+        + "</p><p><small>Dataset SHA-256: <code>"
+        + value["dataset_sha256"]
+        + "</code></small></p><table><thead><tr><th>ID</th><th>Speaker</th><th>Split</th><th>WER</th><th>CER</th></tr></thead><tbody>"
+        + "".join(rows)
+        + "</tbody></table><p><small>WER/CER use documented normalization. Signal diagnostics and synthetic fixtures do not establish perceptual model quality.</small></p></html>"
+    )
