@@ -148,3 +148,11 @@ def test_report_csv_invariants():
 def test_report_html_example():
     page = m.report_html(m.evaluate_dataset([{"id": "a"}]))
     assert page.startswith("<!doctype html>") and "<table>" in page and "Corpus WER" in page
+
+
+def test_report_html_boundaries():
+    with pytest.raises(ValueError):
+        m.report_html({}, "title")
+    with pytest.raises(ValueError):
+        m.report_html(m.evaluate_dataset([]), None)
+    assert "Samples: 0" in m.report_html(m.evaluate_dataset([]))
