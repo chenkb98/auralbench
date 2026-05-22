@@ -156,3 +156,11 @@ def test_report_html_boundaries():
     with pytest.raises(ValueError):
         m.report_html(m.evaluate_dataset([]), None)
     assert "Samples: 0" in m.report_html(m.evaluate_dataset([]))
+
+
+def test_report_html_invariants():
+    run = m.evaluate_dataset([{"id": "a", "speaker": "<script>alert(1)</script>&"}])
+    page = m.report_html(run, "<img src=x>")
+    assert "<script>" not in page and "<img src=x>" not in page
+    assert "&lt;script&gt;" in page and "&lt;img src=x&gt;" in page and "&amp;" in page
+    assert page == m.report_html(run, "<img src=x>")
