@@ -1,5 +1,5 @@
-import numpy as np
 import pytest
+
 from auralbench import text as m
 
 

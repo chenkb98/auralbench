@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import math
+from typing import Literal
+
 import numpy as np
-from numpy.typing import ArrayLike, NDArray
 
 
 def _text(value: str) -> str:
@@ -11,7 +11,7 @@ def _text(value: str) -> str:
     return value
 
 
-def normalize_unicode(text: str, form: str = "NFKC") -> str:
+def normalize_unicode(text: str, form: Literal["NFC", "NFD", "NFKC", "NFKD"] = "NFKC") -> str:
     """Normalize Unicode using an explicitly selected standard form."""
     import unicodedata
 
@@ -83,7 +83,8 @@ def edit_alignment(reference: list[str], hypothesis: list[str]) -> dict:
                 costs[i, j - 1] + 1,
                 costs[i - 1, j - 1] + int(reference[i - 1] != hypothesis[j - 1]),
             )
-    i, j, operations = n, k, []
+    i, j = n, k
+    operations: list[dict[str, str | int | None]] = []
     counts = dict(matches=0, substitutions=0, deletions=0, insertions=0)
     while i or j:
         if (

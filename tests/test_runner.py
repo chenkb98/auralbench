@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+
 from auralbench import runner as m
 
 
@@ -24,6 +25,7 @@ def test_evaluate_record_boundaries():
 def test_evaluate_record_invariants():
     import tempfile
     from pathlib import Path
+
     from auralbench import audio
 
     with tempfile.TemporaryDirectory() as temporary:
@@ -136,7 +138,8 @@ def test_report_csv_boundaries():
 
 
 def test_report_csv_invariants():
-    import csv, io
+    import csv
+    import io
 
     speaker = '说话人, "A"'
     value = m.evaluate_dataset([{"id": "a", "speaker": speaker}])

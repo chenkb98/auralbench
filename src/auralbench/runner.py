@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 import math
-import numpy as np
-from numpy.typing import ArrayLike, NDArray
-
 
 from . import audio, dataset, metrics, statistics
 
@@ -81,8 +78,8 @@ def _result(value: dict) -> dict:
 
 
 def _inputs(value: dict, root: str):
-    from pathlib import Path
     import hashlib
+    from pathlib import Path
 
     directory = Path(root).resolve(strict=True)
     digest = hashlib.sha256(dataset.records_encode([value]).encode())
