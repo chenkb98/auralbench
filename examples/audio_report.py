@@ -1,5 +1,7 @@
 from pathlib import Path
+
 import numpy as np
+
 from auralbench.audio import wav_encode
 from auralbench.runner import evaluate_dataset, report_html
 

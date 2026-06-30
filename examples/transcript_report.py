@@ -1,5 +1,6 @@
 from pathlib import Path
-from auralbench.runner import evaluate_dataset, report_html, report_json, report_csv
+
+from auralbench.runner import evaluate_dataset, report_csv, report_html, report_json
 
 run = evaluate_dataset(
     [

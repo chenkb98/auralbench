@@ -1,5 +1,6 @@
 import json
-from auralbench.statistics import paired_difference, bootstrap_mean, permutation_test
+
+from auralbench.statistics import bootstrap_mean, paired_difference, permutation_test
 
 baseline, candidate = [0.3, 0.4, 0.2, 0.1, 0.5], [0.2, 0.3, 0.2, 0.1, 0.4]
 differences = paired_difference(candidate, baseline)

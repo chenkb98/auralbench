@@ -74,6 +74,17 @@ def _result(value: dict) -> dict:
         != counts["hypothesis_words"]
     ):
         raise ValueError("inconsistent transcript counts")
+    expected_wer = (counts["substitutions"] + counts["deletions"] + counts["insertions"]) / max(
+        1, counts["reference_words"]
+    )
+    if not math.isclose(counts["wer"], expected_wer, rel_tol=1e-12, abs_tol=1e-12):
+        raise ValueError("WER disagrees with transcript counts")
+    signal = value["audio"]
+    if signal is not None and (
+        signal["clipping_fraction"] > 1
+        or any(not -120 <= signal[key] <= 120 for key in ["snr_db", "si_sdr_db"])
+    ):
+        raise ValueError("audio metrics are outside their documented bounds")
     return copy.deepcopy(value)
 
 
